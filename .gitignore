@@ -1,0 +1,8 @@
+Rad/*.aux
+Rad/*.bbl
+Rad/*.blg
+Rad/*.fdb_latexmk
+Rad/*.fls
+Rad/*.log
+Rad/*.gz
+Rad/*.toc
