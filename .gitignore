@@ -6,3 +6,4 @@ Rad/*.fls
 Rad/*.log
 Rad/*.gz
 Rad/*.toc
+db/*
