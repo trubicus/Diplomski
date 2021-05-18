@@ -9,6 +9,7 @@ buffer = 1024
 self_ip = "192.168.0.137"
 data_filter = [0, 0, 3]
 
+
 plt.style.use('ggplot')
 
 def live_plotter(x_vec,y1_data,line1,identifier='',pause_time=0.0001):
@@ -57,6 +58,17 @@ x_vec = np.linspace(0, 1, size+1)[0:-1]
 y_vec = np.linspace(-5, 5, size+1)[0:-1]
 line1=[]
 
+# detekcija ponavljanja
+upper_treshold = 2.0
+lower_treshold = -2.0
+# 0 - prije početka ponavljanja
+# 1 - početak ponavljanja
+# 2 - faza prije povratka noge
+# 3 - povratak noge
+repetition_state = 0
+rep_count = 0
+
+
 while(True):
     sample = []
     for phone in client:
@@ -87,6 +99,27 @@ while(True):
     line1 = live_plotter(x_vec, y_vec, line1)
     y_vec = np.append(y_vec[1:], 0.0)
 
-    print(signal)
+    # print(y_vec[-2])
+    if y_vec[-2] < lower_treshold and repetition_state == 0:
+        print("start")
+        repetition_state = 1
+
+    if y_vec[-2] < 0.1 and y_vec[-2] > -0.1 and repetition_state == 1:
+        print("mid state")
+        repetition_state = 2
+
+    if y_vec[-2] > upper_treshold:
+        print("down")
+        repetition_state = 3
+
+    if y_vec[-2] < 0.1 and y_vec[-2] > -0.1 and repetition_state == 3:
+        print("end")
+        rep_count += 1
+        print("Rep", rep_count)
+        repetition_state = 0
+
+
+
+    # print(signal)
 
         
