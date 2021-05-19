@@ -61,6 +61,8 @@ line1=[]
 # detekcija ponavljanja
 upper_treshold = 2.0
 lower_treshold = -2.0
+quiet_treshold = 0.1
+input_is_quiet = lambda: y_vec[-2] < quiet_treshold and y_vec[-2] > -quiet_treshold
 # 0 - prije početka ponavljanja
 # 1 - početak ponavljanja
 # 2 - faza prije povratka noge
@@ -91,34 +93,31 @@ while(True):
             
     if len(sample) != 0:
         signal.append(sample)
-
-    if len(sample) == 0:
+    else:
         continue
 
+    # Iscrtavanje grafa u stvarnome vremenu
     y_vec[-1] = float(sample[0][3])
     line1 = live_plotter(x_vec, y_vec, line1)
     y_vec = np.append(y_vec[1:], 0.0)
 
-    # print(y_vec[-2])
     if y_vec[-2] < lower_treshold and repetition_state == 0:
         print("start")
         repetition_state = 1
 
-    if y_vec[-2] < 0.1 and y_vec[-2] > -0.1 and repetition_state == 1:
+    if input_is_quiet() and repetition_state == 1:
         print("mid state")
         repetition_state = 2
 
-    if y_vec[-2] > upper_treshold:
+    if y_vec[-2] > upper_treshold and repetition_state == 2:
         print("down")
         repetition_state = 3
 
-    if y_vec[-2] < 0.1 and y_vec[-2] > -0.1 and repetition_state == 3:
+    if input_is_quiet() and repetition_state == 3:
         print("end")
         rep_count += 1
         print("Rep", rep_count)
         repetition_state = 0
-
-
 
     # print(signal)
 
