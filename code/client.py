@@ -87,7 +87,6 @@ while(True):
         for i in data_filter:
             data.pop(i)
         
-
         if len(data) != 0:
             sample.append(data[:6])
             

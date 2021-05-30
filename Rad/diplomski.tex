@@ -1,6 +1,8 @@
 \documentclass[times, utf8, diplomski]{fer}
 \usepackage{booktabs}
+\usepackage{listings}
 \graphicspath{{./img/}}
+\lstset{language=Python, tabsize=4, numbers=left, basicstyle=\small}
 
 \begin{document}
 
@@ -121,6 +123,88 @@ identifikacijski brojevi senzora te same vrijednosti senzora kako se vidi u slic
 
 Kako bi se ti podaci primili i pohranili na adekvatan način potrebno je napraviti program klijent koji osluškuje na određenim portovima. Implementacija tog programa 
 u ovome radu biti će napravljena koristeći skriptni jezik python. 
+
+Python je vrlo popularan jezik mnogih mogučnosti koji je vrlo jednostavan za naučiti i koristiti te zbog svoje popularnosti raspolaže mnogim bibliotekama.
+Neke od tih vrlo korisnih biblioteka koje će biti korištene u ovome radu su \textit{numpy}, \textit{matplotlib} te \textit{socket}. Python se kao skriptni jezik
+izvodi liniju po liniju te se svaka linija iterpretira tek kad ona dođe na red za izvršavanje što ukida proces prevođenja programa u strojni kod kao što je to primjerice
+potrebno kod programskog jezika \textit{C}. Iz tog razloga je vrijeme izvršavanja takvoga koda znatno dulje što znatno utječe na performanse programa. Kako bi se
+izvođenje kompliciranijih matematičkih operacija znatno ubrzalo te kako bi se ponudio veći opseg već gotovih funkcija napravljena je biblioteka \textit{numpy}.
+Numpy je biblioteka koja nudi gotovo sve potrebne funkcije za izradu programa koji se koriste u znanosti. Implementira višedimenzionalne matrice te sve funkcije
+za operaciju nad njima uključujući promjenu oblika matrice te sve matrične operacije. Također nudi i funkcije za Fourierovu transformaciju, statističku obradu,
+generatore nasumičnih brojeva i slično. Numpy implementacija matrica je znatno bliža onakvim matricama kao što su u programskome jeziku C te su kao takve memorijski
+znatno manje zahtjevne od originalnih matrica koje nudi python. Također kako bi operacije nad matricama bile brze operacije su implementirane u programskome jeziku C te
+prevedene unaprijed tako da biblioteka nudi vrlo jednostavnu sintaksu uz jako veliku brzinu izvođenja te manju veličinu datoteke pri pohrani podataka.
+Biblioteka \textit{socket} nudi funkcije za umreživanje koje su potrebne kako bi se podaci uspješno primili sa mobilnih uređaja je \textit{matplotlib} koji je potreban
+za vizualizaciju podataka u obliku grafova.
+
+\begin{lstlisting}[caption=Ostvarivanje veze na strani klijenta, label=socket]
+def init_client(srv_port):
+    client_socket = socket.socket(family=socket.AF_INET,\\
+                                    type=socket.SOCK_DGRAM)
+    client_socket.bind((self_ip, srv_port))
+    return client_socket
+
+client = []
+
+client.append(init_client(port))
+print("UDP client up") 
+\end{lstlisting}
+
+U kodu \ref{socket} je vidljiv način na koji se koristi biblioteka \textit{socket}. Svaki mobilni uređaj predstavlja instanca klase \textit{socket} koja se sprema
+u listu klijenata \texttt{client} što omogučuje povezivanje proizvoljnog broja mobilnih senzora pri čemu svaki senzor treba imati svoj poseban port. Port na računalu
+bi trebao biti slobodan odnosno niti jedna druga aplikacija ne bi smjela koristiti taj port za svoj promet. Dobra praksa nalaže da se za osobne potrebe koriste portovi
+brojeva većih od 1024 kako bi se izbjegli moguči zauzeti portovi nekakvih standardnih protokola kao što su \textit{https} i slični. U ovome slučaju mobilni uređaj
+s indeksom 0 koristi port broja 5555 te svaki sljedeći zauzima port $5555 + i$ pri čemu je $i$ indeks uređaja. Točan broj je potrebno unjeti ručno na svaki uređaj
+koji šalje podatke. Stvaranje instance \textit{socket} odvija se u liniji 2 i 3 pri čemu se u argumentu treba navesti tip veze. Za familiju veze se navodi
+\texttt{AF\_INET} što predstavlja IP protokol te pod tip se navodi \texttt{SCOK\_DGRAM} što označava korištenje UDP protokola. UDP (eng. \textit{User Datagram Protocol})
+je jedan od osnovnih transportnih protokola koji podatke prenosi po principu \textit{best effort}, pretpostavlja se da su datagrami došli do odredišta u ispravnome redosljedu
+te se ne potvrđuje primitak datagrama. Ovakav protokol ne garantira cjelovitost podataka no nudi manje zagušenje prometa zbog nedostatka potvrđivanja svakog primljenog
+datagrama i retransmisije u slučaju gubitka te se iz tog razloga koristi za prijenos videa ili VoIP (eng. \textit{Voice over IP}) pozive. U liniji 4 se instanca razreda
+\textit{socket} povezuje s odgovarajučim portom na odgovarajučem mrežnom uređaju koji je predstavljen vlastitom IP adresom \texttt{self\_ip}. Na kraju funkcija
+\texttt{init\_client} vraća instancu kako bi bila spremljena u klijentsku listu.
+
+\begin{lstlisting}[caption=Primanje podataka, label=primanje]
+while(True):
+    sample = []
+    for phone in client:
+        bytes_adress_pair = phone.recvfrom(buffer)
+        data = []
+        message = bytes_adress_pair[0].decode().split(",")
+        for i in message:
+            data.append(i.strip())
+
+        # filteri podataka
+        if "4" not in data:
+            continue
+
+        for i in data_filter:
+            data.pop(i)
+        
+        if len(data) != 0:
+            sample.append(data[:6])
+            
+    if len(sample) != 0:
+        signal.append(sample)
+    else:
+        continue
+\end{lstlisting}
+
+U odsječku koda \ref{primanje} prima se datagram svakog mobilnog uređaja. Svaki datagram se uzima iz međuspremnika koji je veličine 1024 bajta. Svaki datagram se sastoji
+od samih podataka (u 6. liniji koda pod indeksom 0) te IP adrese pošiljatelja koja u ovoj implementaciji nije potrebna te se može izostaviti. Nad podacima se vrše obrade
+poput uklanjanja bjelina (linija 8.) te rastavljanje podataka iz jednog monolitnog zapisa podataka u više posebnih podataka pomoću \texttt{split} funkcije uzimajući
+zarez kao graničnik. Zatim te podatke valja filtrirati pri čemu se uklanja \textit{vremenski indeks}, identifikatori senzora te podaci magnetometra
+vidljivi na slici \ref{datagram}. Eksperimentalno se pokazalo da se pri prvih nekoliko mjerenja od početka slanja podataka sa mobilnih uređaja izostavljaju vrijednosti
+žiroskopa te se gledajući prisutnost tih vrijednosti dodatno vrši čekanje na spremnost svih senzora u mobilnome uređaju. U ovome kodu to se vrši uvjetovanjem u liniji 11.
+Struktura podataka je prikazana u slici \ref{struktura}.
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{OrganizacijaPOdataka.png}
+    \caption{Struktura podataka}
+    \label{struktura}
+\end{figure}
+
+Uzorak jednoga uređaja je lista vrijednosti njegovih senzora. Jedan uzorak je lista uzoraka \textbf{svih} uređaja. Signal je samo lista uzoraka. Na ovaj se način akcija 
+može snimiti i koristeći biblioteku \textit{numpy} pohraniti na računalo za daljnju obradu.
 
 
 \section{Implementacija metode strojnoga učenja}
