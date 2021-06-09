@@ -56,6 +56,111 @@ Ovaj rad će se više fokusirati na medicinski aspekt klasifikacije pokreta, pre
 \section{Rješenje koristeći IMU senzore}
 
 \section{Analiza IMU senzora}
+IMU (eng. \textit{Inertial Measurement Unit}) je elektromehanički uređaj koji služi za mjerenje sila, kunih brzina te pozicije
+uređaja koristeći skup senzora: akcelometar, žiroskop te magnetometar. Svaki od pojedinih senzora se sastoji od 3 manja senzora
+koji svoj posao obavlja u odnosu na pojedinu os u prostoru. Oni u kombinaciji čine jednu jedinicu koja mjeri vrijednosti u sve 
+3 prostorne dimenzije. Rane izvedbe ovakvoga senzora (poput one u Apollo 11 letjelici) su bile vrlo velikih dimenzija i nisu
+u sebi imale magnetometar. Danas su se dimenzije IMU senzora znatno smanjile te je moguće izraditi sve potrebne komponente u
+sklopu jednog čipa koristeći unaprijeđenja izrade sklopova u samom siliciju. Iako komponente jesu napravljene u siliciju one su
+još uvijek elektromehaničke po prirodi što znači da se komponente slobodno gibaju unutar silicijske ploče na samome čipu
+te su kao takve mikro-elektromehaničke (skračeno \textit{MEMS}). Danas su takvi uređaji nezamjenjivi u bilokakvim letjelicama a
+pogotovo u bespilotnim letjelicama (eng. \textit{drone}) koji su u današnje vrijeme sve popularniji. Vrlo su bitni također u
+navigacijskim uređajima jer u kombinaciji sa GPS uređajima daju dodatnu mogućnost pozicioniranja u slučajevima kada sam GPS signal
+nije pristupačan kao što je to primjerice u tunelima te dodatno povećavaju preciznost pračenja kretanja. To je jedan od razloga
+zašto je IMU senzor neizbježna komponenta pri izradi pametnih telefona. U rukama inženjera IMU senzori su dobili mnogo raznih 
+kreativnih svrha te se mogu naći kao dio kontrolera u igraćim konzolama di služe kao dodatna metoda interakcije igrača sa igrom.
+Prva promatrana komponenta bit će akcelometar.
+
+\textbf{Akcelometar}
+
+Akcelometar je senzor koji mjeri iznos sile u određenom smjeru. Jednostavan akcelometar se može konceptuirati kao masa ovješena na 
+opruzi. Opruga se komprimira onoliko koliko je masa teška odnosno onoliko koliko je utjecaj gravitacije na tu masu. U slučaju
+pojave nove sile u smjeru opruge ona se dodatno otpušta odnosno steže te je ukupan iznos sile na tijelo \textit{"pohranjen"}
+unutar opruge odnosno istog je iznosa ali suprotne orjentacije. Kako bi se taj iznos mogao očitati u električnome obliku potrebno
+je izvršiti pretvorbu a to se može ostvariti na dva načina, koristeći piezoelektrike te korištenje kapacitivnosti. Piezoelektrici
+su materijali koji svoju deformaciju mogu pretvoriti u električni impuls te obratno, električni impuls mogu pretvoriti u mehaničku
+deformaciju. Vrlo su korisni te njihova primjena varira od senzora koji vibracije akustičnih instrumenata pretvara u električne
+signale kako bi se oni mogli snimiti i obraditi do okidača u đepnim upaljačima koji svojom deformacijom bacaju iskru potrebnu za
+započimanje vatre. Od tog piezoelektričnog materijala se može napraviti opruga te bi kompresija i dekompresija opruge mogla davati
+električni signal ekvivalentan iznosu sile na masu. Takva izvedba je vrlo skupa ali vrlo precizna za promatranje nekih pojava 
+primjerice visokofrekventnih vibracija.
+
+Druga mogučnost je korištenje kapacitivnosti kao mjeru kompresije i dekompresije opruge. Ako je masa ovješena na opruzi jedna ploča
+kondenzatora, onda je površina na kojoj se sama opruga ovješena druga ploča kondenzatora. Ako su te dvije ploče pod naponom,
+kompresija i dekompresija opruge približava i udaljava jednu ploču (masu) u odnosu na drugu ploču (površinu) te se kapacitet
+povečava odnosno smanjuje što opisuje sljedeća jednadžba.
+
+$$
+C = \frac{\epsilon A}{d}
+$$
+
+Jedina promjenjiva varijabla je udaljenost $d$. Princip rada vidljiv je na slici \ref{accmtr}.
+
+
+\begin{figure}[h!]
+    \includegraphics[width=\textwidth]{Accelerometers.jpg}
+    \caption{Princip rada kapacitivnog akselometra (preuzeto sa \textit{insights.globalspec.com})}
+    \label{accmtr}
+\end{figure}
+
+Kako bi se dimenzije akcelometra u potpunosti smanjile potrebno je razviti takav kapacitivni elektromehanički uređaj napravljen od
+silicija koji bi bio u nekom od adekvatnih pakiranja za integrirane krugove. Također kako bi bili u mogučnosti promatrati silu u
+prostoru potrebno je napraviti pojedini senzor za svaku od tri prostorne koordinate te kako bi one bile u što većoj mjeri usklađene
+potrebno je sve ostvariti unutar jedne površine silicija kako bi bili skupa unutar integriranoga kruga u fiksnoj poziciji.
+
+\textbf{Žiroskop}
+
+Žiroskop je uređaj koji se sastoji od rotirajučeg diska koji se nalazi unutar kardanskog zgloba (eng. \textit{gimbal}). Rotirajuči
+disk ima svoju kutnu količinu gibanja koja je promjenjiva jedino onda kada se na rotirajući disk djeluje silom, u protivnom
+disk se rotira slobodno u ravnini u kojoj je zavrćen. Kardanski zglob je konstrukcija prstenja oko tog diska koji se oko diska
+slobodno može rotirati u svim smjerovima bez da utječe na poziciju diska odnosno idejno ne djeluje silom na taj disk. Ovakav uređaj
+je neznamjenjiv i jedan od najbitnijih komponenti svih letjelica jer uvijek letjelici daje referentnu točku iz koje se može
+zaključiti točan položaj iste u zraku. Koristeći varijabilne otpore odnosno potenciometre postavljene na osovine kardanskog zgloba,
+točna pozicija se može pretvoriti u električni signal koji se dalje može obrađivati i koristiti primjerice za
+automatsku korekciju pozicije bilokakvog projektila ili letjelice koja nudi mogučnost autopilota. Također, kako je brzina prva
+derivacija puta u vremenu, tako je i kutna brzina derivacija promjene kuta u vremenu te se iz brzine promjene kuta može izračunati
+i kutna brzina prilikom rotacije žiroskopa. Ovakva izvedba žiroskopa je
+relativno velikih dimenzija te nikako nije primjerena za ugradnju u uređaje malih dimenzija kao što je to nekakav mobilni uređaj.
+Za dizajn koji je dovoljno malih dimenzija potrebno je opet okrenuti se elektromehaničkim jedinicama implementiranim u poluvodiču.
+Kod takve implementacije nije moguče imati rotirajuči disk i kardanski zglob što znaći da na ovakvoj skali nije moguće ostvariti 
+pravi žiroskop koji bi konstantno pratio poziciju uređaja ali je moguće napraviti uređaj koji mjeri kutnu brzinu.
+Takav uređaj se sastoji od vibrirajuće strukture, pojednostavljeno dvije mase koje titraju u suprotnim smjerovima.
+Prilikom rotacije, mase se više ne nalaze u inercijskom sustavu već u akceleriranome što znaći da na njih djeluju sile.
+Kada je sustav u rotaciji unutar njega djeluju razne sile kao što su centrifugalna, centripetalna i Coriolisova sila.
+Coriolisova sila je inercijska sila koju tijela doživljavaju prilikom gibanja u rotiranom okviru promatranja. Sveprisutna je na 
+planeti Zemlji te je vidljiva prilikom puštanja značajne količine vode u umivaoniku kao smjer vrtloženja vode i zaslužna za
+uragane. Smjer djelovanja Coriolisove sile je okomit na smjer gibanja te na smjer rotacijskog vektora vidljivo na slici \ref{}.
+
+%\begin{figure}[h!]
+%    \includegraphics[width=\textwidth]{Accelerometers.jpg}
+%    \caption{Princip rada kapacitivnog akselometra (preuzeto sa \textit{insights.globalspec.com})}
+%    \label{accmtr}
+%\end{figure}
+
+\textbf{Magnetometar}
+
+Magnetometar je senzor koji mjeri jačinu magnetnog polja koristeći pojave u elektromagnetizmu. Promjena magnetnog polja može
+inducirati napon unutar vodića koji se nalazi u blizini no na taj se način može detektirati samo promjena. Za mjerenje magnetnog
+polja koristi se Hallov efekt. Hallov efekt je fizikalna pojava koja javlja prilikom gibanja nabijene čestice kroz magnetno polje.
+Električki nabijena čestica unutar magnetnog polja mjenja svoju putanju te počinje skretati i u slučaju gibanja po beskonačnoj
+površini počinje svoje kružno gibanje pri čemu centripetalnu silu predstavlja Lorenzova sila. Pri ograničenoj površini nosioc
+naboja putuje po vodiću prateći krivulju u smjeru u kojemu na njega djeluje Lorenzova sila te se na taj način istovrsni nosioci
+nađu na istoj strani vodića te nisu nasumično raspršeni po njemu. Ta polarizacija predstavlja napon koji se može izmjeriti pri
+čemu iznos tog napona ovisi o kutu između silnica magnetnoga polja i vodića te samom intenzitetu magnetnoga polja. Kako bi bi se 
+nosioci naboja gibali unutar vodića potrebno je vodić spojiti na naponski izvor energije te kako bi oni imali prostora putovati na 
+jednu od strana vodića on mora biti plosnat i veće površine. Primjer principa rada magnetometra vidljiv je na slici \ref{}.
+
+%\begin{figure}[h!]
+%    \includegraphics[width=\textwidth]{Accelerometers.jpg}
+%    \caption{Princip rada kapacitivnog akselometra (preuzeto sa \textit{insights.globalspec.com})}
+%    \label{accmtr}
+%\end{figure}
+
+Svaka od opisanih komponenata predstavlja samo dio pojedinog senzora i to dio koji mjeri pojave u samo jednom smjeru. Kako bi se
+dobila kompletna slika potrebno je koristiti tri komponente, po jedna za svaki smjer u koordinatnom sustavu. Kako bi se to postiglo
+potrebno je osmisliti arhitekturu poluvodičke pločice te paziti na preciznost i ispravno pozicioniranje svake komponente kako bi
+ona mjerila točno svoj smjer u odnosu na druge. Ovakvi senzori dolaze često u pakiranju kao pojedini čipovi ili kao jedna cijela
+IMU cjelina.
 
 \section{Analiza dostupnih baza podataka}
 
@@ -206,6 +311,30 @@ Struktura podataka je prikazana u slici \ref{struktura}.
 Uzorak jednoga uređaja je lista vrijednosti njegovih senzora. Jedan uzorak je lista uzoraka \textbf{svih} uređaja. Signal je samo lista uzoraka. Na ovaj se način akcija 
 može snimiti i koristeći biblioteku \textit{numpy} pohraniti na računalo za daljnju obradu.
 
+Kako bi se prikupili odgovarajući podaci za treniranje i uporabu neuronske mreže potrebno je iz toka podataka izdvojiti pojedina ponavljanja vježbi kako bi samo ti bitni
+segmenti ili bili prikupljeni za treniranje neuronske mreže ili kako bi se pojedini segment predao neuronskoj mreži na klasifikaciju. 
+Mnogi radovi primjerice \cite{android}, \cite{exo} i \cite{LowerLimb} spominju pronalazak karakterističnih točaka unutar signala
+kao jednu od glavnih faza predobrade signala. Ovisno o željenom rezultatu moguće je promatrati statičke osobine signala
+kao što su to prosjek, standardna deviacija, variancija i slično te dinamičke kao što su to energija, prosjek energije, odnos
+harmonika, energetska entropija i slično \citep{android}. Također je moguće napraviti posebne klasifikatore koji su u suštini
+neuronske mreže trenirane posebno za detekciju pojedinih osobina signala kao što su to napravili \cite{exo}. 
+Najjednostavniji pristup tome je promatranje samo jedne osi određenoga senzora u nekome vremenskom periodu kao što su to napravili
+\cite{LowerLimb}. Promatranjem samo jedne osi jednoga senzora fokus može biti na pseudoperiodičnosti tog signala te se detekcija
+periodičnosti i segmentacija može odviti pomoću detekcije rubnih vrijednosti. Izvođenjem jednostavnije vježbe poput ispruživanja
+potkoljenice (eng. \textit{leg extension}) s obzirom na poziciju mobilnog uređaja koji se nalazi ekranom okrenutim od potkoljenice uspravno na
+potkoljenici može se sav fokus staviti na vrijednosti žiroskopa u $x$ osi. Snimajući te iscrtavajući odgovarajuče vrijednosti
+na grafu vrlo je jasno vidljiv period te same karakteristike funkcije (slika \ref{period}). Dok se vježba ne izvodi signal je
+vrlo miran i iznosi približno 0. U trenutku početka pružanja potkoljenice zbog smjera rotacije mobilnog uređaja kutna brzina iznosi
+otprilike $-2.5 rad/s$. Zatim se potkoljenica u stanju potpune ispruženosti smiri te kutna brzina iznosi 0. Pri spuštanju kutna
+brzina raste te također iznosi približno $2.5 rad/s$, ali u ovom slučaju u pozitivnom smjeru. Uzeći ove vrijednosti može se ostvariti
+konačan automat koji prati vrijednosti signala te mjenja stanja u odnosu na iste pri čemu se pamti početak perioda. Ako se automat nađe u
+prihvatljivom stanju onda to predstavlja kraj periode te je poznat cijeli segment signala koji predstavlja jedno ponavljanje.
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{period.png}
+    \caption{Primjer jednog ponavljanja vježbe, x - vrijeme, y - kutna brzina}
+    \label{period}
+\end{figure}
 
 \section{Implementacija metode strojnoga učenja}
 
