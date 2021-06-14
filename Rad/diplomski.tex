@@ -160,7 +160,48 @@ Svaka od opisanih komponenata predstavlja samo dio pojedinog senzora i to dio ko
 dobila kompletna slika potrebno je koristiti tri komponente, po jedna za svaki smjer u koordinatnom sustavu. Kako bi se to postiglo
 potrebno je osmisliti arhitekturu poluvodičke pločice te paziti na preciznost i ispravno pozicioniranje svake komponente kako bi
 ona mjerila točno svoj smjer u odnosu na druge. Ovakvi senzori dolaze često u pakiranju kao pojedini čipovi ili kao jedna cijela
-IMU cjelina.
+IMU cjelina odnosno SiP (eng. \textit System in Package).
+
+Ovakvih IMU sustava za razvoj uređaja na tržištu ima mnogo. Neki takvi su ICM-20948 tvrtke TDK i BMI serija IMU senzora tvrtke
+Bosch koji su više industrijski orjentirani te postoje i oni orjentirani za hobiste i razvoj prototipova primjerice razvojne pločice
+tvrtki \textit{Adafruit} i \textit{SparkFun}. Senzor ICM-20948 jedan je od najraširenijih IMU senzora u području znanosti i
+industrije iz razloga što zahtjeva vrlo malo snage za pokretanje (2.5mW) \citep{ICM} što je vrlo proizvoljno 
+za sustave napajane baterijom kao što su to mobilni telefoni ili nekakvi IoT (eng. \textit{Internet of Things}) uređaji.
+Također nudi i digitalni procesor pokreta (eng. \textit{Digital Motion Processor - DMP}) koji služi tome da se algoritmi analize
+pokreta mogu izvoditi na tom procesoru čime se rasterećuje glavni procesor ili mikrokontroler što dodatno štedi energiju. Dolazi u
+QFN (eng. \textit{Quad Flat No-leads}) pakiranju te je u slučaju nabavke samo takvoga čipa potrebno je izraditi vlastitu tiskanu
+pločicu što je poželjno u slučaju potrebe za nekim prilagođenim rješenjem no u slučaju izrade prototipa dodaje još jedan zahtjevan
+proces u izradu što nije poželjno. Neke kineske kompanije izrađuju već gotove tiskane pločice koje se mogu nabaviti što je vrlo
+poželjno za izradu prototipa. Druga vrsta takvih senzora su senzori za izradu jednostavnih prototipa i hobiste i primjeri takvih su
+Adafruit L3GD20H i SparkFun Razor IMU. Adafruit IMU razvojno okruženje u sebi sadrži čip L3GD20H tvrtke ST te nudi priključke te
+pretvarače napona kako bi se ova razvojna pločica mogla spojiti sa popularnim razvojnim okruženjima kao što je to Arduino ili
+ESP32. Razor IMU sadrži čip MPU-5250 također tvrtke TDK koji je prethodnik već navedenog čipa ICM-20948 te u trenutku pisanja
+ovoga rada je označen sa EOL (eng. \textit{End Of Life}) te proizvođač preporučuje korištenje trenutne ICM verzije čipa.
+Popularna sučelja kojima se međusobno razvojne platforme i senzori povezuju su I2C i SPI. Bitna razlika između ICM-20948 i L3GD20H
+je u logičkim naponskim razinama. ICM za komunikaciju koristi maksimalnih 1.95V \citep{ICM} što se bitno razlikuje od naponskih
+razina razvojnih okruženja pri čemu Arduino koristi 5V TTL i ESP32 koristi 3.3V TTL. Za korištenje sa takvim okruženjima potrebno je
+koristiti most za pretvorbu signala primjerice PCA9306 most za pretvorbu I2C signala korišten u \cite{mini_data_capture}.
+Prednost ICM čipa u odnosu na ostale navedene je mogučnost napajanja naponom od 1.8V pri čemu zahtjeva 3.11mA struje.
+U usporedbi sa L3GD20H kojemu je potrebno 3V te zahtjeva 5mA struje zahtjeva znatno manje snage što je primjerenije za rješenja
+koja ovise o baterijskim napajanjima primjerice ugradbeni IoT sustavi ili mobilni telefoni. ICM može koristiti samo pojedine
+komponente te svaka od komponenti može podržavati određenu brzinu uzorkovanja. Akselometar maksimalno može slati svoja mjerenja
+frekvencijom od 4.5kHz, žiroskop 9kHz te magnetometar 100Hz. U dokumentaciji čipa L3GD20H nisu navedene točne frekvencije
+uzorkovanja po komponenti, samo su navedene podržane frekvencije između 11.9Hz i 757.6Hz. Ove vrijednosti predlažu da je za
+potrebu snimanja nekakvih visokofrekventnih vibracija bolji odabir ICM čip no za potrebe snimanja pokreta djelova tijela visoka
+frekvencija nije bitan kriterij. Iz tog razloga valja razmotriti još jedan set IMU senzora a to je onaj koji se nalazi u pametnome
+telefonu. Svaki pametni telefon u sebi ima jedan IMU senzor koji tom telefonu daje dodatne funkcionalnosti kao navigaciju, kompas,
+rotaciju orjentacije ekrana i kao način upravljanja igrama. Mana ovoga pristupa je ta što sam model i specifikacija senzora
+nisu javno dostupni podaci ne iz razloga tajnosti i intelektualnog vlasništva već proizvođači ne smatraju to bitnim informacijama.
+Iz tog razloga nije moguće referencirati tehničku dokumentaciju i saznati neke ključne informacije u slučajevima kada je vrlo 
+bitna preciznost i peformansa senzora. Prednost ovoga pristupa je ta što svi mobiteli podržavaju uzorkovanje frekvencijom od 
+100Hz što je prema Nyquistovom teoremu ovoljno za snimanje periodičnih pokreta od gotovo 50Hz što je i više nego dovoljno.
+Također ovakav pristup umanjuje e-otpad jer je jedan mobilni telefon već gotov sustav sa vlastitim napajanjem, načinom punjenja,
+sučeljem za upravljanje (dodinik) te mogučnošću spremanja podataka odnosno slanja podataka preko bluetooth veze ili WiFi mreže.
+Također pametni telefoni imaju u sebi vrlo močne procesore te bi se na njima mogla i izvoditi sama obrada podataka ukoliko za time
+ima potrebe. Kako gotovo svaka osoba posjeduje minimalno jedan takav uređaj, skupljanje podataka u velikoj količini na taj način
+postaje vrlo jednostavan i jeftin. Sličan pristup se koristi u \cite{android}, radu koji koristi samo jedan IMU senzor
+postavljen na polovici potkoljenične kosti te uzorkuje signal frekvencijom od 102.4Hz te putem bluetooth veze šalje podatke na 
+pametni telefon na kojemu se sami podaci obrađuju te je preciznost prepoznavanja pokreta vrlo visoka.
 
 \section{Analiza dostupnih baza podataka}
 
