@@ -117,15 +117,15 @@ slobodno može rotirati u svim smjerovima bez da utječe na poziciju diska odnos
 je neznamjenjiv i jedan od najbitnijih komponenti svih letjelica jer uvijek letjelici daje referentnu točku iz koje se može
 zaključiti točan položaj iste u zraku. Koristeći varijabilne otpore odnosno potenciometre postavljene na osovine kardanskog zgloba,
 točna pozicija se može pretvoriti u električni signal koji se dalje može obrađivati i koristiti primjerice za
-automatsku korekciju pozicije bilokakvog projektila ili letjelice koja nudi mogučnost autopilota. Također, kako je brzina prva
+automatsku korekciju pozicije bilokakvog projektila ili letjelice što nudi mogučnost autopilota. Također, kako je brzina prva
 derivacija puta u vremenu, tako je i kutna brzina derivacija promjene kuta u vremenu te se iz brzine promjene kuta može izračunati
 i kutna brzina prilikom rotacije žiroskopa. Ovakva izvedba žiroskopa je
 relativno velikih dimenzija te nikako nije primjerena za ugradnju u uređaje malih dimenzija kao što je to nekakav mobilni uređaj.
-Za dizajn koji je dovoljno malih dimenzija potrebno je opet okrenuti se elektromehaničkim jedinicama implementiranim u poluvodiču.
+Za dizajn uređaja koji je dovoljno malih dimenzija potrebno je opet okrenuti se elektromehaničkim jedinicama implementiranim u poluvodiču.
 Kod takve implementacije nije moguče imati rotirajuči disk i kardanski zglob što znaći da na ovakvoj skali nije moguće ostvariti 
 pravi žiroskop koji bi konstantno pratio poziciju uređaja ali je moguće napraviti uređaj koji mjeri kutnu brzinu.
-Takav uređaj se sastoji od vibrirajuće strukture, pojednostavljeno dvije mase koje titraju u suprotnim smjerovima.
-Prilikom rotacije, mase se više ne nalaze u inercijskom sustavu već u akceleriranome što znaći da na njih djeluju sile.
+Takav uređaj se sastoji od vibrirajuće strukture, pojednostavljeno, dvije mase koje titraju u suprotnim smjerovima.
+Prilikom rotacije, mase se više ne nalaze u inercijskom sustavu već u akceleriranome što znaći da na njih djeluju inercijalne sile.
 Kada je sustav u rotaciji unutar njega djeluju razne sile kao što su centrifugalna, centripetalna i Coriolisova sila.
 Coriolisova sila je inercijska sila koju tijela doživljavaju prilikom gibanja u rotiranom okviru promatranja. Sveprisutna je na 
 planeti Zemlji te je vidljiva prilikom puštanja značajne količine vode u umivaoniku kao smjer vrtloženja vode i zaslužna za
@@ -204,6 +204,73 @@ postavljen na polovici potkoljenične kosti te uzorkuje signal frekvencijom od 1
 pametni telefon na kojemu se sami podaci obrađuju te je preciznost prepoznavanja pokreta vrlo visoka.
 
 \section{Analiza dostupnih baza podataka}
+Mnogo je znanstvenih radova napisano na temu ljudskih pokreta i analizu istih. Kako bi se ljudski pokreti analizirali potrebno ih 
+je na neki način snimiti a to se može ostvariti jednom od metoda analiziranih u pijašnjem poglavlju. Kako bi znanost mogla
+napredovati te kako bi se drugi ljudi mogli uvjeriti u rezultate rada, mnogi autori svoje podatke stavljaju javno dostupnima.
+Ovo će se poglavlje baviti analizom već dostupnih baza podataka, metodom prikupljanja tih podataka te njihovom svrhom.
+Većina dostupnih podataka su prikupljeni podaci o hodu (eng. \textit{gait}). Razlikuju se u broju sudionika, metodi prikupljanja
+podataka, i svrsi prikupljanja tih podataka.
+
+Prva razmatrana baza podataka je \texttt{whuGAIT} autora \cite{zou2020gait}. U svome radu autori razmatraju mogučnost biometrijske
+identifikacije i autentifikacije osoba koristeći specifične karakteristike hoda. Skup podataka sastoji se od podataka prikupljenih
+sa pametnog telefona koji se nalazio u džepu osobe koja je bila snimana pri čemu su se snimali tri osi akselometra i tri osi
+žiroskopa frekvencijom uzorkovanja od 50Hz. U prikupljanju podataka je sudjelovalo 118 različitih osoba. Skup podataka je podjeljen
+u 8 podskupova od kojih su podskupovi 1-4 namjenjeni za identifikaciju osobe, 5 i 6 za autentifikaciju i skupovi 7 i 8 za
+razdvajanje podataka između onih u kojima se vrši hodanje i onih u kojima se ne hoda kako bi se korištenjem neuronske mreže
+razdvojio kontinuirani tok podataka. U svim podskupovima su podaci zapisani u tekstualnu datoteku kao CSV vrijednosti. Svaka
+tekstualna datoteka predstavlja jednu os akselometra odnosno žiroskopa te svaka linija unutar datoteke je uzorak hoda neke osobe.
+U posebnoj datoteci se nalaze brojevi koji predstavljaju pojedinu osobu kojoj snimka hoda pripada. Svrha ovih podataka je treniranje
+neuronske mreže koja rješava problem n-klasne klasifikacije odnosno pokušava prepoznati i identificirati odnosno autentificirati
+osobu bazirano isključivo na njezinom hodu. Koristeći ove podatke \cite{zou2020gait} su dobili preciznost od 93\% u identifikaciji 
+i autentifikaciji no ovi podaci nisu iskoristivi za klasifikaciju pojedinog pokreta jer nije anotirana za pojedine pokrete te se 
+ne može iskoristiti za treniranje takve mreže no pokazuju da je moguće snimiti vrlo precizne karakteristike pokreta koristeći samo 
+jedan pametni telefon.
+
+Sljedeća razmatrana baza podataka je ona koju su snimili \cite{uneven}. Njihov cilj je bio napraviti bazu koja sadrži podatke o
+načinu hoda po raznim površinama kako bi uvidili performanse hoda. Prilikom snimanja sudjelovalo je 30 osoba (15 ženskih i
+15 muških). Svaka osoba je na sebi imala po 6 IMU senzora: lijeva i desna potkoljenica, lijeva i desna nadkoljenica, donji dio leđa
+oko L1 kralješka i desno zapešće. Svaka osoba je hodala ravno bez promjene smjera 6 puta po ravnoj asfaltiranoj površini, uzbrdici
+odnosno nizbrdici, stepenicama u oba smjera, travnata površina, neravna kamena cigla i šljunak. Podaci svakoga od 6 senzora su
+pohranjeni u svojoj CSV datoteci označenoj šifrom iz koje je vidljivo na kojoj se lokaciji nalazio senzor te po kojoj površini
+osoba hoda. Podaci svake pojedine osobe se nalazi unutar vlastitog direktorija. Svaki hod unutar direktorija dolazi i sa binarnom
+datotekom koja predstavlja te podatke. Uz sve te podatke \cite{uneven} su također obradili i uveli u \textit{Matlab} datoteku pod 
+imenom \texttt{data.mat}. Ovakva baza podataka nudi razne mogučnosti poput klasificiranja površine po kojoj osoba hoda ili samo 
+detekcija hoda opčenito neovisno o površini. Autori su ponudili svoju bazu podataka sa svrhom da unaprijede već postojeće baze
+ljudskoga hoda koje su zbog tehničkih ograničenja snimane isključivo u laboratorijskim uvijetima te kao takve nisu bile primjerene
+za primjere iz stvarnoga svijeta. Razvojem IMU tehnologije i bežićne komunikacije \cite{uneven} odlučili su napraviti set podataka
+snimajući hod u stvarnome svijetu. Ova baza podataka također nije primjerena za potrebe ovoga rada jer su anotirani samo tereni
+po kojima ispitanici hodaju te se ne klasificira pokret.
+
+Bazu podataka pod imenom \texttt{HuGaDB} su ostvarili \cite{HuGaDB}. Prilikom provedbe radnji snimljeno je 18 različitih sudionika
+koji su imali 6 IMU senzora na sebi te 2 EMG senzora. IMU senzori su postavljeni na nadkoljenice, podkoljenice te stopala sudionika
+pri čemu su snimali radnje: hodanje, trčanje hodanje uz stepenice, hodanje niz stepenice, samo sjedenje, sjedenje iz stajačeg položaja,
+ustajanje iz sjedećeg položaja, stajanje, voženje bicikla, dizanje unutar dizala, spuštanje unutar dizala i sjedenje
+u automobilu kao putnik. Sve radnje su u potpunosti segmentirane što znaći da su ispravno anotirane te spremne za treniranje
+neuronske mreže. Podaci su pohranjeni u tekstualne datoteke u kojima svaki stupac predstavlja vrijednosti pojedinog segmenta
+svakog senzora pri čemu je pozicija senzora označena sa oznakom strane na kojoj se nalazi R i L te pozicijom na nozi F, S i T
+(eng. \textit{Foot, Shin i Thigh} redom). Uz poziciju senzora oznaka \textit{acc} i \textit{gyro} označava pojedinu komponentu
+IMU senzora te oznake \textit{x, y i z} predstavljaju pojedinu os. Tako jedan segment s oznakom \texttt{acc\_rs\_x} označava
+podatke akselometra na desnoj potkoljenici u x osi. Svaka tekstualna datoteka se sastoji od identifikatora sudionika,
+rednog broja ponavljanja, aktivnosti, verzije i prefiksa koji označava datoteku sa podacima. Tako primjerice datoteka sa imenom
+\texttt{HGD\_v1\_walking\_17\_02.txt} označava podatke prve verzije baze podataka u kojoj osoba pod rednim brojem 17 hoda po
+drugi put. Autori \cite{HuGaDB} na svojoj \textit{github} stranici nude već gotove skripte koje služe učitavanju podataka u
+matlab i python programe te skriptu koja tekstualne datoteke pretvara u \textit{SQLite}. bazu podataka.
+Ova baza podataka se ne bavi pojedinim djelom tijela no uzimajući samo podskup 
+senzora bilo bi moguće ostvariti prepoznavanje akcije poput vožnje bicikla, hodanja i slično što je puno bliže klasifikaciji pokreta
+kakva se razmatra u ovome radu. Problematika ove baze podataka je navedena u uputstvima te nalaže da su zbog greške u žiroskopu
+neke vrijednosti krive jer je snimak pojačan 10 puta što je dovelo do \textit{klipinga} te je takav signal gotovo neiskoristiv.
+Svaki takav slučaj je dokumentiran u tablici te se po potrebi ti podaci mogu izbjeći.
+
+Poslijednja razmatrana baza podataka je jedna od najvećih baza podataka hoda sa kliničkim anotacijama koju su snimili \cite{pressurePlate}.
+Podaci su prikupljani u Austrijskom rehabilitacijskom centru od 2007. do 2018. godine. U prikupljanju je sudjelovalo 2085 pacjenata.
+Svaki je pacjent trebao bez ikakvih pomagala prehodati 10 metara preko potisnih ploča (eng. \textit{Pressure plate}) koje su snimale
+GRF (eng. \textit{Ground Reaction Force}) odnosno silu pritiska stopala. Svaki pacjent je svoj hod ponovio 10 puta te je ponavljao
+hod na tjednoj bazi. Snimke su anotirane prema dijagnozi te prema razini rehabilitacije kako bi se mogle usporediti i sa drugim
+pacjentima te kako bi imali uvid u proces rehabilitacije. Problematika ove baze podataka je u tome što se za snimanje pokreta ne
+koriste inercijski senzori već se koristi set potisnih ploča koje snimaju samo težinu kojom pacjenti djeluju na njih te takva baza 
+podataka nije primjerena za analizu pojedinih pokreta već samo hoda.
+
+
 
 \section{Stvaranje vlastite baze podataka}
 Za stvaranje vlastite baze podataka potrebno je definirati svrhu i ciljeve te baze a zatim odrediti metodu prikupljanja podataka. U ovome će radu
