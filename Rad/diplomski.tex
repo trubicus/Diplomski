@@ -18,7 +18,7 @@
 \maketitle
 
 % Ispis stranice s napomenom o umetanju izvornika rada. Uklonite naredbu \izvornik ako želite izbaciti tu stranicu.
-\izvornik
+%\izvornik
 
 % Dodavanje zahvale ili prazne stranice. Ako ne želite dodati zahvalu, naredbu ostavite radi prazne stranice.
 \zahvala{}
@@ -51,9 +51,172 @@ Ovaj rad će se više fokusirati na medicinski aspekt klasifikacije pokreta, pre
 
 \section{Bolesti koljena}
 
-\section{Dosadašnja rješenja}
+\section{Metode prikupljanja podataka}
+Prikupljanje podataka o ljudskim pokretima može se odviti koristeći različite metode i tehnologije.
+Svaka od tih tehnologija ima svoju granu primjene te možda neće biti adekvatna za primjenu u nekoj drugoj grani.
 
-\section{Rješenje koristeći IMU senzore}
+Prva razmatrana metoda prikupljanja informacija o pokretima je korištenje potisne ploče. Potisne ploče su elementi po kojima osoba
+hoda te u sebi ima mjerač deformacija. Mjerač deformacija može biti ostvaren kao elastičan vodič vidljivim na slici \ref{defgag}. 
+
+\begin{figure}[h!]
+    \includegraphics[width=\textwidth]{strain_gauge.jpg}
+    \caption{Izgled mjerača deformacija (preuzeto sa \textit{wikipedia.com})}
+    \label{defgag}
+\end{figure}
+
+Ovakav mjerač mjeri uzdužnu deformaciju na način da se elastični vodić prilikom deformacije izdulji odnosno suzbije
+čime se zbog produljenja i sužavanja odnosno skračivanja i širenja vodiča mjenja ukupan otpor i time se deformacija može izmjeriti.
+Ovisno o arhitekturi mjerača on mjeri deformaciju u nekome smjeru te kombinacijom više mjerača može se izmjeriti deformacija
+u sve tri osi. Na taj način može se dobiti GRFV (eng. \textit{Ground Reaction Force Vector}) koji predstavlja, prema trećem Newtonovom zakonu,
+sila reakcije i suprotna je utjecaju osobe koja djeluje na ploču. Osim ovakvih mjerača deformacija mogu se koristiti piezoelektrici
+koji svojom deformacijom stvaraju razlike u potencijalima odnosno napon. Piezoelektrične potisne ploče su puno preciznije ali su
+i znatno skuplje te ovisi o budžetu i o primjeni koja se tehnologija koristi. Ovakav pristup daje uvid isključivo u sile koje
+djeluju na stopala i distribuciju težišta što je vrlo povoljno za analizu hoda ali i za ništa drugo. Potisne ploče vrlo su popularne
+pri mjerenju performansa sportaša te mnogi profesionalne sportske ustanove i klubovi ulažu u vlastite ploče kako bi mogli nadzirati
+svoje igrače. Ovakav pristup je korišten za prikupljanje jedne od najvećih baza podataka anotiranih za kliničku analizu \citep{pressurePlate}
+opisanu u kasnijem poglavlju. Koristeći isti princip, kako bi se lakše mogle pratiti sile koje djeluju na stopala prilikom
+raznih aktivnosti, moguće je napraviti uloške za cipele koje su također potisne ploče. Na ovakav način moguće je pratiti korake
+ispitanika bez postavljanja više velikih potisnih ploča te ograničavanje ispitanika na samo tu manju površinu što je za potrebe
+praćenja performansi sportaša u pojedinim sportovima idealno.
+
+Jedna od metoda koja služi baš praćenju pocizicija donjih ekstremiteta je korištenje egzoskeleta. Egzoskelet je naprava koja se
+postavi na vanjsku stranu ljudskoga tijela kako bi se njegovi djelovi kretali skupa sa djelovima tijela. Kako je svako tijelo
+različitih dimenzija egzoskelet se mora moći namjestiti prema fizionomiji osobe na koju se postavlja kako bi zglobovi bili u
+ravnini sa osovinama egzoskeleta. Za snimanje kretanja, na osovine egzoskeleta se postavljaju varijabilni otpori koji te osovine
+pretvaraju u goniometar - uređaj koji mjeri kuteve. Svaki pokret zgloba može se zapisati kao promjena otpora u vremenu. Za to je
+potrebno imati osovine na pordučju kukova, koljena i skočnih zglobova. Ovakav pristup puno vjernije snima pokrete tijela od potisnih
+ploča jer se ne gleda samo sila na površinu koju vrši osoba već se precizno mjere kutevi njegovih ekstremiteta u vremenu. 
+
+
+Problem korištenja egzoskeleta je taj što sam egzoskelet može značajno promjeniti način kretanja. Razlog tome je masa egzoskeleta
+koja ovisi o materijalima i izvedbi te način pričvrščivanja za ljudsko tijelo. Također promjenjivi otpornici snimaju kuteve 
+ekstremiteta u samo jednoj ravnini te ne snimaju niti konstrukcija dopušta moguću rotaciju ekstremiteta u drugim smjerovima.
+Egzoskeleti mogu poslužiti za snimanje pokreta no njihova prava primjena nije u domeni prikupljanja podataka. Njihova primjena 
+leži u robotskim egzoskeletima kakav je primjerice na slici \ref{exoskeleton}.
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{exoskeleton.jpg}
+    \caption{Primjerak robotskog egzoskeleta Exo-H3 (preuzeto sa \textit{technaid.com})}
+    \label{exoskeleton}
+\end{figure}
+
+Robotski egzoskeleti su naprave koje imaju isključivo senzore i snimaju pokrete već uz senzore imaju i aktuatore kao elektromotore.
+Aktuatori glume ljudske pokrete i pomažu osobama sa poteškoćama. Jedna od glavnih primjena robotskih egzoskeleta je u fizikalnim
+terapijama u kojima pacjenti zbog nekakve ozljede trebaju učiti ponovno hodati te pomažu nepokretnim osobama i osobama koje su
+doživile moždani udar da postanu i ostanu mobilni. Potencijal ovakvih robotskih egzoskeleta je uvidila i vojna industrija te
+je razvoj krenuo i u tom smjeru. U slučaju da osoba nije nepokretna moguće je iskoristiti senzore kako bi se pokreti snimali te
+bi aktuatori istovremeno te pokrete izvodili \citep{exo}. Time se znatno rasterećuje ljudsko tijelo ali ovisno i o snazi aktuatora moguće je i
+potencirati ljudsku snagu. Na taj bi način jedna osoba mogla podizati predmete znatno teže nego što bi ona to sama ikad mogla
+napraviti i to bez ikakvog naprezanja jer bi cijela težina predmeta bila raspoređena na strukturi egzoskeleta a ne na ljudskom 
+tijelu što značajno rasterećuje tijelo te se osoba vremenom ne umara. Ovakvu tehnologija se također razmatra za veliko unapređenje
+radnih uvijeta u građevinskoj i logističkoj industriji jer bi se znatno umanjile nesreće uzrokovane padom predmeta zbog ljudske
+istrošenosti i očuvala ljudska tijela jer nebi više dolazilo do pucanja mišića ili dobivanja bruha zbog prevelikog tereta na tijelu.
+
+Kako sam egzoskelet znatno utječe na slobodno kretanje udova sljedeća razmatrana metoda prikupljanja podataka taj problem pokušava riješiti
+bez naprava koje bi smetale snimanju slobodnog pokreta. Digitalne kamere snimaju kretanje osobe te kako nisu pričvršćene na osobu
+na nikakav način ne utječu na njeno kretanje stoga je osoba u mogučnosti kretati se na najprirodniji mogući način. Ovisno o količini
+okvira u sekundi kojom kamera snima osobu može se dobiti brzo uzorkovanje primjerice korištenjem vrlo brzih kamera sa i do
+12600 okvira u sekundi ili korištenjem standardnih potrošačkih kamera do 100 okvira u sekundi. Idući od okvira do okvira osoba ručno
+može označiti karakteristične točke na ljudskome tijelu te na taj način doći do podataka no takav postupak bi bio vrlo isrpan i
+nepraktičan. Za automatizaciju tog postupka može se iskoristiti nekoliko različitih metoda. Prva razmatrana će biti korištenje
+računalnog vida. Računalni vid je grana računalne znanosti koja se bavi načinom na koje računalo obrađuje digitalne slike i videe 
+te razumjeva njihov sadržaj. Za rješavanje ovakve problematike se izdvajaju zavidna sredstva te je istraživanje došlo vrlo daleko.
+Kina je jedna od zemalja koja ulaže puno sredstava u tehnologiju računalnog vida jer joj je u interesu koristiti tehnologiju za 
+masovni nadzor građana. Nad snimkama s kamere se provodi analiza te je algoritam u mogučnosti prepoznati točnu osobu koja se na 
+snimci nalazi u stvarnome vremenu. Na sličan način je moguče na snimci prepoznati ljudsko tijelo te označiti interesne točke kao zglobove ekstremiteta
+te na taj način automatizirano prikupiti podatke o karakteristikama pokreta. Problem ovoga pristupa je ovisnost o osvjetljenju i o
+dovoljno velikom kontrastu između osobe i pozadine kako bi algoritam pronašao željene točke. U slučaju da je kontrast suviše mali 
+algoritam neće biti u mogučnosti prepoznati osobu ni interesne točke na snimci. Kada su laboratorijski uvijeti mogući koristi se
+kombinacija pozadine i odjeće koja je vrlo kontrastna te koristeći jednostavnu obradu slike moguće je izdvojiti samu siluetu osobe
+što znatno poboljšava rezultate algoritma i prepoznavanje pokreta.
+
+Za povečanje preciznosti praćenja pokreta moguće je koristiti sljedeču razmatranu metodu a to je korištenje reflektirajućih markera
+prilikom snimanja. Reflektirajući markeri su napravljeni po mogučnosti od retroreflektirajučih materijala (često poznatih pod nazivom
+\textit{mačje oko}) koji iz bilokojeg kuta
+mogu reflektirati izvor svjetlosti koji se nalazi pored objektiva kamere te postavljeni na ljudsko tijelo daju vrlo dobru oznaku
+traženih točaka.
+Prilikom obrade snimke te markere je vrlo lako izdvojiti jer su znatno svjetliji od svoje okoline te se na taj način može dobiti
+vrlo precizna snimka pozicija tih točaka u prostoru. Kako bi ti markeri predstavljali dio tijela što preciznije potrebno ih je
+postaviti na vrlo usku odjeću kako bi se kretali točno sa tijelom bez dodatnih smetnji koje bi kretanje tkanine proizvelo. Također
+, kako se što većim kontrastom lakše detektiraju, ti markeri trebaju biti postavljeni na tamnu odječu, ovisno o primjeni crnu ili
+sivu. Za još bolje rezultate mogu
+se i iskoristiti i \textbf{aktivni} markeri koji su u suštini LED diode te emitiraju svjetlost što znači da ne ovisi o dodatnome
+osvjetljenju za razliku od \textit{pasivnih} (reflektirajućih) markera koji samo reflektiraju već postojeće svjetlo. Ovakav pristup dopušta
+postavljanje i pračenje proizvoljnog broja točaka na ljudskome tijelu. Jedini uvijet je da te točke budu dovoljno razmaknute jedne
+od drugih kako bi kamera sa svoje udaljenosti mogla razlikovati svaku točku posebno. Kako je kamera uređaj koji snima dvodimenzionalnu
+sliku iz perspektive u kojoj se nalazi postoji problem snimanja pokreta u tri dimenzije. Jedna kamera nije u mogučnosti uhvatiti
+više dimenzija i adekvatna je za snimanje pokreta u dvije dimenzije slično kao i egzoskelet. Za dobivanje dubine moguće je ostvariti
+stereoskopiju uz pomoć još jedne kamere, postavke koja je u svijetu poznata kao \textit{3D kamera}. Naime na taj je način moguće
+dobiti informaciju o dubini no vidljivost markera još uvijek ovisi o perspektivi kamera te ovakva postavka je podložna problematici
+okluzije. Okluzija se javlja u slučajevima kada marker iz pozicije kamere nije vidljiv jer se ili nalazi iza osobe ili neki drugi
+predmet zaklanja pogled. U ovakvim slučajevima sustav za prepoznavanje pojedinih markera tretira isti marker kao dva različita
+markera te se na taj segmentiran način podaci zapisuju. Kako bi se podaci povezali potrebno je manualnim putem tražiti takve markere
+te na neki način interpolirati dio podatka koji zbog okluzije nedostaje kako bi se, ono što je sustav vidio kao dva različita
+markera pretvorili opet u jedan kontinuirani. Zbog okluzije je moguće izgubiti velik broj korisnih podataka stoga je pozicija
+kamera vrlo krucijalna. Kako bi se dobila kompletna snimka
+pokreta u tri dimenzije potrebno je koristiti više kamera istovremeno. Te kamere moraju biti postavljene na način da u kadru postoji
+preklapanje sa kadrom druge kamere kako bi se migracija markera iz kadra jedne u kadar druge kamere mogao pratiti i prepoznati
+kao isti marker a ne kao dva različita. Za ovakvu postavu potrebno je imati minimalno tri kamere no više kamera predstavlja
+manji rizik od javljanja okluzije.
+
+Koristeći veliki broj kamera visoke rezolucije, mogučnosti snimanja velikog broja okvira u sekundi, postavljajući vrlo velik broj 
+markera na tijelo te koristeći vrlo močna računala koja te snimke analiziraju te pretvaraju snimke u korisne podatke o pokretu
+mogu se dobiti vrlo kvalitetni podaci. No toliko kvalitetni podaci imaju svoju cijenu koja je izvan budžeta večini ustanova te samo 
+neke velike kompanije si ovakve sustave mogu priuštiti. Ova tehnologija je vrlo raširena u industriji računalnih igara
+(eng. \textit{Gaming}) te filmskoj industriji za potrebe specijalnih efekata. Njihova uporaba i svrha tehnologije je vrlo slična.
+U filmskoj industriji se češće koriste siva odjela sa markerima jer je osobama koje kasnije rade specijalne efekte u postprodukciji
+vrlo bitno vidjeti izvor svjetla na filmskome setu te su markeri pasivni kako nebi nepoželjnim osvjetljenjem utjecali na svoju
+okolinu u kadru. Također se u filmskoj industriji koristi manji broj kamera jer su kadrovi dvodimenzionalni i najčešće je samo
+jedna kamera glavna dok nekoliko drugih kamera ima funkciju praćenja markera u prostoru. U industriji računalnih igara kadar nije
+statičan već je potrebno vrlo precizno snimiti pokrete iz što više kuteva kako bi došlo do minimalne okluzije. Za to su primjereniji
+aktivni markeri i crna odjela su preferabilna jer se dobije veći kontrast između tijela i markera a za razliku od filmske industrije
+osvjetljenje nije bitno jer je mjesto radnje virtualno te se izvor svjetla postavlja programski. Također je poželjno vrlo precizno
+snimiti pokrete iz svih kuteva zbog dinamične perspektive koja se u 3D igrama može mjenjati ovisno o poziciji i orjentaciji igrača,
+stoga je potrebno imati što više kamera postavljnih oko površine na kojoj se osoba nalazi. Zahvaljujući tome glumac ili neka stručna 
+osoba tipa majstor borilačkih vještina može svoju točku izvesti najbolje što može te se ti isti pokreti mogu primjeniti na likove
+u igri te kao rezultat toga likovi u igrama imaju vjerodostojne, ljudske pokrete koje je nemoguće ostvariti umjetno. Također se u
+obije industrije koristi specijalna kamera montirana na glavu osobe koja glumi te je usmjerena u lice na kojemu se također nalaze
+markeri. Na ovaj način se maksimalno izbjegava okluzija markera te se snimaju pomaci pojedinog mišića lica tijekom glume kako 
+bi se u procesu animacije dobili pravi ljudski izrazi lica. Ovakva postavka opreme je vidljiva na slici \ref{planet} na kojoj se
+nalazi scena iz filma "Planet Majmuna: Revolucija" (eng. \textit{"Dawn of the Planet of the Apes}) (2014.) redatelja Matta Reevesa.
+
+\begin{figure}[h!]
+    \includegraphics[width=\textwidth]{planet.jpg}
+    \caption{Primjer opreme za pračenje pokrena u filmu (preuzeto sa \textit{aeromental.com})}
+    \label{planet}
+\end{figure}
+
+Kako je već napomenuto ranije u poglavlju, ovakav sustav za praćenje pokreta ima veliki budžetni rang no jeftinije varijante su
+vrlo neprecizne i podložne problemima okluzije dok su skuplje varijante suviše skupe ali zato i znatno preciznije. Također problem
+je isto i sama infrastruktura i lokacija snimanja jer ovakva postava opreme je vrlo statična i zahtjeva studijske uvjete što si mnoge
+ustanove nemogu priuštiti. Također veliki broj markera za potrebe klasifikacije pokreta nije potreban. Zbog svih ovih problema ovakvo 
+rješenje se može iskoristiti no vrlo je skupo i operiranje ovakvom opremom je često vrlo zahtjevno te je iz tih razloga neadekvatno.
+
+Zadnja razmatrana metoda je ona koja se u ovome radu koristi te ona uključuje korištene inercijskih (IMU) senzora. IMU senzori su
+senzori koji se sastoje od akcelometra, žiroskopa i magnetometra. Korištenjem tih triju komponenti moguće je pratiti pokrete u
+prostoru. Žiroskop daje informaciju o kutnoj brzini u određenoj osi, akcelometar daje informaciju o sili koja djeluje na njega
+te magnetometar daje informaciju o magnetnom polju oko sebe koje uz odsudstvo bilokakvih metalnih predmeta i magneta daje informaciju
+o orjentaciji senzora u zemljinom magnetnom polju odnosno služi kao svojevrsni kompas. Koristeći sve ove informacije moguće je
+pozicionirati uređaj te pratiti pokrete uređaja. IMU senzori se nalaze u svakom pametnom telefonu kao senzor orjentacije kako bi se
+prilagodila orjetacija ekrana, zapis o orjentaciji uslikanih fotografija ali i pojedini pametni telefoni kreativnije koriste IMU
+senzore te se oni mogu koristiti za upravljanje nekakvih gestama primjerice trešnja pametnog telefona pali svjetlo kamere ili
+okretanje telefona ekranom prema dole odbija dolazeći poziv i slično. Ovakvi senzori se također koriste za praćenje orjentacije
+letjelica u zraku te za mjerenja i nadgledanja primjerice vibracija. Ono što se iz navedenih primjera može zaključiti oni su vrlo
+malih dimenzija te kao takvi mogu biti postavljeni na bilokoje mjesto. Također zahtjevaju malo energije za svoj rad stoga se mogu
+postaviti na neku udaljenu lokaciju gdje mogu snimati podatke. Cijena takvog senzora je vrlo pristupačna i minimalna cijena trenutno
+je 3.33€ od kineskog nabavljaća preko stranice AliExpress.com što čini ovakve senzore vrlo povoljnima za nabaviti i koristiti u
+većim količinama. Koristeći pseudoperiodičnost ljudskog pokreta proizvođači poput tvrtke Xiaomi su napravili uređaje za praćenje
+tjelesne aktivnosti (eng. \textit{Fitness tracker}) u obliku sata koji koristeći IMU senzore mogu detektirati i brojati pojedini korak 
+te koristeći BLE (eng. \textit{Bluetooth Low Energy}) telemetriju šalje na pametni telefon na kojemu aplikacija analizira signale
+te može prepoznati različite aktivnosti primjerice sjedenje, hodanje, trčanje i slično koristeći samo jedan senzor.
+
+Korištenjem više senzora postavljenih na udovima tijela moguće je puno preciznije snimati kretanja pri čemu osoba ima veliku slobodu,
+veću negu u slučaju optičkog praćenja pokreta gdje se slobodno giba ispred kamera, veću nego u slučaju korištenja egzoskeleta u
+kojemu sama naprava utječe na kretanje i snima podatke u samo jednoj ravnini te je moguće dobiti više podataka nego što to pružaju
+potisne ploče. Osoba se može kretati bez prisustva druge osobe te se signali mogu snimati na memorijske kartice ili slati preko
+interneta što čini ovakvu metodu prikupljanja podataka vrlo adekvatnim. U daljnjim poglavljima detaljnije se analizira
+rad senzora te metode prikupljanja podataka i primjena tih podataka nad neuronskom mrežom kako bi se klasificirali pokreti donjih
+ekstremiteta.
 
 \section{Analiza IMU senzora}
 IMU (eng. \textit{Inertial Measurement Unit}) je elektromehanički uređaj koji služi za mjerenje sila, kunih brzina te pozicije
@@ -171,7 +334,7 @@ Također nudi i digitalni procesor pokreta (eng. \textit{Digital Motion Processo
 pokreta mogu izvoditi na tom procesoru čime se rasterećuje glavni procesor ili mikrokontroler što dodatno štedi energiju. Dolazi u
 QFN (eng. \textit{Quad Flat No-leads}) pakiranju te je u slučaju nabavke samo takvoga čipa potrebno je izraditi vlastitu tiskanu
 pločicu što je poželjno u slučaju potrebe za nekim prilagođenim rješenjem no u slučaju izrade prototipa dodaje još jedan zahtjevan
-proces u izradu što nije poželjno. Neke kineske kompanije izrađuju već gotove tiskane pločice koje se mogu nabaviti što je vrlo
+proces u izradu što često nije poželjno. Neke kineske kompanije izrađuju već gotove tiskane pločice koje se mogu nabaviti, što je vrlo
 poželjno za izradu prototipa. Druga vrsta takvih senzora su senzori za izradu jednostavnih prototipa i hobiste i primjeri takvih su
 Adafruit L3GD20H i SparkFun Razor IMU. Adafruit IMU razvojno okruženje u sebi sadrži čip L3GD20H tvrtke ST te nudi priključke te
 pretvarače napona kako bi se ova razvojna pločica mogla spojiti sa popularnim razvojnim okruženjima kao što je to Arduino ili
