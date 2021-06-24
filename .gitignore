@@ -8,3 +8,6 @@ Rad/*.gz
 Rad/*.toc
 db/*
 *.npy
+code/moj_model
+RNNdata.ods
+.~lock*
