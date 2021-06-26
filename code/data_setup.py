@@ -46,28 +46,12 @@ def load_data(path):
             if action in sample:
                 out = [0.0 for i in actions]
                 out[actions.index(action)] = 1.0
-                for j in range(4):
+                for j in range(5):
                     y.append(np.transpose(np.array(out, dtype=np.float32)))
                 break
 
     return x, y
 
-def find_max_len(data_arr):
-    global max_len
-    for i in data_arr:
-        i_len = i.shape[1]
-        if i_len > max_len:
-            max_len = i_len
-
-def match_len(data_arr):
-    global max_len
-    if max_len == 0:
-        find_max_len(data_arr)
-
-    for i in range(len(data_arr)):
-        data_arr[i] = np.pad(data_arr[i], ((0, 0), (0, max_len - data_arr[i].shape[1])), mode='wrap')
-        
-    return data_arr
 
 def pad_data(data):
     return  np.pad(data, ((0, 0), (0, max_len - data.shape[1])), mode='wrap')
