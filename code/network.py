@@ -33,5 +33,6 @@ model.add(Dense(6, activation='softmax'))
 #opt = tf.keras.optimizers.Adam(learning_rate=0.001, decay=1e-6)
 
 model.compile(loss="categorical_crossentropy", optimizer='adam', metrics=["accuracy"])
-model.fit(x_train, y_train, epochs=60, validation_data=(x_test, y_test), batch_size=30, shuffle=True)
-model.save("moj_model")
+#model.fit(x_train, y_train, epochs=60, validation_data=(x_test, y_test), batch_size=30, shuffle=True)
+model.fit(x_train, y_train, epochs=100, validation_data=(x_test, y_test), batch_size=200, shuffle=True)
+model.save("benchmark")

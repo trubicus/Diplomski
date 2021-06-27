@@ -289,13 +289,13 @@ Prilikom rotacije, mase se više ne nalaze u inercijskom sustavu već u akceleri
 Kada je sustav u rotaciji unutar njega djeluju razne sile kao što su centrifugalna, centripetalna i Coriolisova sila.
 Coriolisova sila je inercijska sila koju tijela doživljavaju prilikom gibanja u rotiranom okviru promatranja. Sveprisutna je na 
 planeti Zemlji te je vidljiva prilikom puštanja značajne količine vode u umivaoniku kao smjer vrtloženja vode te je zaslužna za
-uragane. Smjer djelovanja Coriolisove sile je okomit na smjer gibanja te na smjer rotacijskog vektora vidljivo na slici \ref{}.
+uragane. Smjer djelovanja Coriolisove sile je okomit na smjer gibanja te na smjer rotacijskog vektora vidljivo na slici \ref{gyro}.
 
-%\begin{figure}[h!]
-%    \includegraphics[width=\textwidth]{Accelerometers.jpg}
-%    \caption{Princip rada kapacitivnog akselometra (preuzeto sa \textit{insights.globalspec.com})}
-%    \label{accmtr}
-%\end{figure}
+\begin{figure}[h!]
+    \includegraphics[width=\textwidth]{gyro.png}
+    \caption{Princip rada žiroskopa}
+    \label{gyro}
+\end{figure}
 
 \textbf{Magnetometar}
 
@@ -308,13 +308,13 @@ naboja putuje po vodiču prateći krivulju u smjeru u kojemu na njega djeluje Lo
 nađu na istoj strani vodiča te nisu nasumično raspršeni po njemu. Ta polarizacija predstavlja napon koji se može izmjeriti pri
 čemu iznos tog napona ovisi o kutu između silnica magnetnoga polja i vodiča te samom intenzitetu magnetnoga polja. Kako bi bi se 
 nosioci naboja gibali unutar vodiča, potrebno je vodič spojiti na izvor energije, te kako bi oni imali prostora putovati na 
-jednu od strana vodiča on mora biti plosnat i veće površine. Primjer načela rada magnetometra vidljiv je na slici \ref{}.
+jednu od strana vodiča on mora biti plosnat i veće površine. Primjer načela rada magnetometra vidljiv je na slici \ref{mag}.
 
-%\begin{figure}[h!]
-%    \includegraphics[width=\textwidth]{Accelerometers.jpg}
-%    \caption{Princip rada kapacitivnog akselometra (preuzeto sa \textit{insights.globalspec.com})}
-%    \label{accmtr}
-%\end{figure}
+\begin{figure}[h!]
+    \includegraphics[width=\textwidth]{mag.png}
+    \caption{Princip rada magnetometra}
+    \label{mag}
+\end{figure}
 
 Svaka od opisanih komponenata predstavlja samo dio pojedinog senzora i to dio koji mjeri pojave u samo jednom smjeru. Kako bi se
 dobila kompletna slika potrebno je koristiti tri komponente, po jednu za svaki smjer u koordinatnom sustavu. Kako bi se to postiglo
@@ -971,25 +971,72 @@ performanse. Postavke za jednu mrežu nad jednim skupom podataka možda neće bi
 sa drugim skupom podataka. Broj epoha ne smije biti premalen jer se u tom slučaju mreže ne trenira dovoljno,
 no ako je prevelik onda dolazi do pretreniranja i mreža ne radi dobro na pravim podacima.
 
+\begin{table} [h!]
+ \centering
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        Epoch & Loss & Accuracy & Validation Loss & Validation Accuracy \\
+        \hline
+        5 & 0.4475 & 0.8587 & 1.0917 & 0.7794 \\
+        \hline
+        10 & 0.2955 & 0.9091 & 1.0228 & 0.7500 \\
+        \hline
+        20 & 0.1119 & 0.9634 & 1.2369 & 0.8382 \\
+        \hline
+        30 & 0.1066 & 0.9763 & 1.1450 & 0.8676 \\
+        \hline
+        40 & 0.0992 & 0.9783 & 0.8373 & 0.8676 \\
+        \hline
+        50 & 0.3322 & 0.9051 & 0.8470 & 0.7941 \\
+        \hline
+        60 & 0.0605 & 0.9832 & 0.9470 & 0.8088 \\
+        \hline
+        90 & 0.0719 & 0.9733 & 0.9114 & 0.8382 \\
+        \hline
+    \end{tabular}
+    \caption{Performanse neuronske mreže u odnosu na broj epoha}
+    \label{data}
+\end{table}
+
+
 
 \chapter{Zaključak}
+U ovome radu razmotrili su se načini prikupljanja podataka koristeći razne alate poput platformi snaga,
+egzoskeleta, kamera i IMU senzora. IMU senzori su se, zbog svojih karakteristika i dimenzija, pokazali
+kao dobra opcija. Razmotrena je metoda prikupljanja podataka koristeći senzore u pametnim telefonima.
+Ovakva metoda omogućuje prikupljanje podataka nad velikim skupom ljudi što je vrlo povoljno za korištenje
+metoda strojnoga učenja. Za implementaciju metoda strojnoga učenja za klasifikaciju pokreta koristila
+se HuGaDB baza podataka. Objašnjen je postupak predobrade podataka te implementacija neuronske mreže
+koristeći Keras, sučelje za TensorFlow platformu za ostvarivanje neuronskih mreža napisanu za programski
+jezik python. Ova implementacija je ostvarila neuronsku mrežu koja koristeći 12 ulaznih signala
+klasificira jednu od 6 radnji sa preciznošću od 86\%. 
 
 
 \bibliography{literatura}
 \bibliographystyle{fer}
 
 \begin{sazetak}
-Sažetak na hrvatskom jeziku.
+Klasifikacija ljudskih pokreta korisna je iz više razloga. Ona se može koristiti za identifikaciju ljudi,
+potrebe praćenja tjelovježbe, praćenje fizikalne terapije i slično. Kako su pokreti svake osobe jedinstveni
+općenita klasifikacija je vrlo teško ostvariva koristeći klasične metode obrade signala. U ovome radu
+klasifikacija pokreta obavlja se implementacijom neuronske mreže treniranoj na javno dostupnoj bazi podataka.
+Razmatraju se razne metode prikupljanja podataka o ljudskim pokretima, razvija se metoda prikupljanja podataka
+koristeći pametne telefone te se radi predprocesuiranje podataka kako bi se uspješno trenirala neuronska mreža.
 
-\kljucnerijeci{Ključne riječi, odvojene zarezima.}
+\kljucnerijeci{strojno učenje, inercijski senzori, neuronska mreža, IMU senzori, žiroskop, akcelerometar}
 \end{sazetak}
 
-% TODO: Navedite naslov na engleskom jeziku.
-\engtitle{Title}
+\engtitle{Human motion classification using inertial sensor data}
 \begin{abstract}
-Abstract.
+Human motion classification is useful for several reasons. It can be used for identification,
+fitness tracking, physical therapy tracking etc. Every human has unique motion characteristics
+and for that reason using classic signal processing for this task is not feasible. In this thesis,
+machine learning is used for motion classification. Neural network is trained using publicly
+available dataset. Several methods for data gathering are considered, smartphone based data
+gathering system is developed and data is preprocessed for machine learning purposes.
 
-\keywords{Keywords.}
+
+\keywords{machine learning, inertial sensors, IMU sensors, gyroscope, accelerometer, neural netowrk}
 \end{abstract}
 
 \end{document}

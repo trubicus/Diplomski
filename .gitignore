@@ -9,5 +9,6 @@ Rad/*.toc
 db/*
 *.npy
 code/moj_model
+code/benchmark
 RNNdata.ods
 .~lock*
